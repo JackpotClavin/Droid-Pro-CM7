@@ -1,0 +1,6 @@
+#!/system/bin/sh
+mount -o rw,remount /system
+mv /system/media/droid.mp3 /system/media/droid.bak
+mount -o ro,remount /system
+echo "Boot silenced"
+exit
