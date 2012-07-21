@@ -346,10 +346,13 @@ def WriteFullOTAPackage(input_zip, output_zip):
 #    ts = GetBuildProp("ro.build.date.utc", input_zip)
 #    script.AssertOlderBuild(ts)
 
+# Check for latest kernel
+# script.AssertKernelVersion()
+
 #  AppendAssertions(script, input_zip)
 #  device_specific.FullOTA_Assertions()
-  if OPTIONS.backuptool:
-    script.RunBackup("backup")
+  #if OPTIONS.backuptool:
+    #script.RunBackup("backup")
 
   script.ShowProgress(0.5, 0)
 
@@ -362,17 +365,23 @@ def WriteFullOTAPackage(input_zip, output_zip):
   script.Mount("/system")
   script.UnpackPackageDir("system", "/system")
 
+  script.RunTouchFirstBoot()
+
   symlinks = CopySystemFiles(input_zip, output_zip)
   script.MakeSymlinks(symlinks)
+
+  script.WeirdSymlinks()
 
   Item.GetMetadata(input_zip)
   Item.Get("system").SetPermissions(script)
 
   script.ShowProgress(0.2, 0)
 
-  if OPTIONS.backuptool:
-    script.ShowProgress(0.2, 10)
-    script.RunBackup("restore")
+  #if OPTIONS.backuptool:
+    #script.ShowProgress(0.2, 10)
+    #script.RunBackup("restore")
+
+  script.BootMenuPermissions()
 
   script.RunChkKineto()
 
@@ -390,6 +399,8 @@ def WriteFullOTAPackage(input_zip, output_zip):
     script.AppendExtra(OPTIONS.extra_script)
 
   script.UnmountAll()
+  script.Print("Friendly reminder")
+  script.Print("to flash GAPPS :-)")
   script.AddToZip(input_zip, output_zip)
   WriteMetadata(metadata, output_zip)
 

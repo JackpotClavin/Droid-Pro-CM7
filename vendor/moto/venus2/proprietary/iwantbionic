@@ -1,7 +1,0 @@
-#!/system/bin/sh
-mount -o rw,remount /system
-mv /system/media/bootanimation.zip /system/media/cmbootanimation.bak
-mv /system/media/bootanimation.bak /system/media/bootanimation.zip
-mount -o ro,remount /system
-echo "Done. Boot animation courtesy of P3Droid"
-exit

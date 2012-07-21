@@ -1,4 +1,4 @@
-on init
+on post-fs
 
 # Backward compatibility
     symlink /dev /dev/netmux
@@ -45,14 +45,6 @@ on init
     write /sys/power/sr_vdd1_autocomp 1
     write /sys/power/sr_vdd2_autocomp 1
     write /sys/power/enable_abb_mode 1
-
-# Allow system to modify cpufreq control files
-    chown root system /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-    chmod 0666 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-    chown root system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-    chmod 0666 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-    chown root system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-    chmod 0666 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 
 # Change ownership for vibrators
     chown system system /sys/class/timed_output/lvibrator/enable
@@ -378,7 +370,7 @@ service rild_tcmd /system/bin/rild_tcmd
 
 service battd /system/bin/battd
     class pre-zygote_services
-    socket battdsock stream 0660 mot_accy mot_accy
+    socket battdsock stream 0660 root system
     user root
     group mot_accy mot_pwric
     oneshot
@@ -570,7 +562,7 @@ service btautoip /system/bin/dhcpcd -BK bnep0
 service baseimage /system/bin/dspexec -v -T /system/lib/dsp/baseimage.dof
     class media_early_init
     user  media
-    group media graphics
+    group media graphics mot_whisper audio
     oneshot
 
 service pvrsrv /system/bin/pvrsrvinit
